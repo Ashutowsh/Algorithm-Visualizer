@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@keyframes visitedAnimation {
+    0% {
+        transform: scale(0.8);
+        background-color: rgba(128, 0, 128, 0.5);
+        /* Purple */
+        border-radius: 100%;
+    }
+
+    30% {
+        background-color: rgba(75, 0, 130, 0.75);
+        /* Indigo */
+    }
+
+    60% {
+        transform: scale(1.1);
+        background-color: rgba(138, 43, 226, 0.75);
+        /* BlueViolet */
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: rgba(72, 61, 139, 0.75);
+        /* DarkSlateBlue */
+    }
+}
+
+@keyframes shortestPath {
+    0% {
+        transform: scale(0.8);
+        background-color: rgba(255, 20, 147, 0.8);
+        /* DeepPink */
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: rgba(255, 105, 180, 1);
+        /* HotPink */
+        /* Fully opaque highlight */
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: rgba(255, 20, 147, 0.8);
+        /* DeepPink */
+    }
+}
+
+
+.node-visited {
+    animation-name: visitedAnimation;
+    animation-duration: 1.5s;
+    /* Adjust for desired speed */
+    animation-timing-function: ease-out;
+    animation-delay: 0;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+
+.node-shortest-path {
+    animation-name: shortestPath;
+    animation-duration: 1.2s;
+    /* Adjust for desired speed */
+    animation-timing-function: ease-out;
+    animation-delay: 0;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
