@@ -122,7 +122,7 @@ const BFS = () => {
     <div className="flex flex-col items-center space-y-6 py-6">
       <div className="flex space-x-4 mb-4 items-center">
         <div className="flex flex-col items-center">
-          <label htmlFor="startRow">Start Row</label>
+          <label htmlFor="startRow">Source Row</label>
           <input
             type="number"
             id="startRow"
@@ -134,7 +134,7 @@ const BFS = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="startCol">Start Column</label>
+          <label htmlFor="startCol">Source Column</label>
           <input
             type="number"
             id="startCol"
@@ -146,7 +146,7 @@ const BFS = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endRow">End Row</label>
+          <label htmlFor="endRow">Goal Row</label>
           <input
             type="number"
             id="endRow"
@@ -158,7 +158,7 @@ const BFS = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endCol">End Column</label>
+          <label htmlFor="endCol">Goal Column</label>
           <input
             type="number"
             id="endCol"

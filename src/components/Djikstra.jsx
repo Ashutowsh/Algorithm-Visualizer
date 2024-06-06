@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Cell from "./Cell";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   dijkstra,
   getShortestPathNodes,
@@ -15,6 +17,16 @@ const Djikstra = () => {
   const [endNode, setEndNode] = useState({ row: 10, col: 38 });
 
   useEffect(() => {
+    if (startNode.row < 0) startNode.row = 0;
+    if (endNode.row < 0) endNode.row = 0;
+    if (startNode.row > 19) startNode.row = 19;
+    if (endNode.row > 19) endNode.row = 19;
+
+    if (startNode.col < 0) startNode.row = 0;
+    if (endNode.col < 0) endNode.col = 0;
+    if (startNode.col > 49) startNode.col = 49;
+    if (endNode.col > 49) endNode.col = 49;
+
     const initialGrid = createInitialGrid(startNode, endNode);
     setGrid(initialGrid);
   }, [startNode, endNode]);
@@ -36,11 +48,15 @@ const Djikstra = () => {
     setIsMousePressed(false);
   };
 
-  const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder) => {
+  const animateDijkstra = (
+    visitedNodesInOrder,
+    nodesInShortestPathOrder,
+    flag
+  ) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
+          animateShortestPath(nodesInShortestPathOrder, flag);
         }, 10 * i);
         return;
       }
@@ -52,7 +68,7 @@ const Djikstra = () => {
     }
   };
 
-  const animateShortestPath = (nodesInShortestPathOrder) => {
+  const animateShortestPath = (nodesInShortestPathOrder, flag) => {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
@@ -61,8 +77,15 @@ const Djikstra = () => {
           ...prevShortestPathNodes,
           node,
         ]);
-        if (i === nodesInShortestPathOrder.length - 1) {
+
+        if (i == nodesInShortestPathOrder.length - 1) {
           setIsFindingPath(false);
+          if (!flag) {
+            toggleWall(grid, startNode.row, startNode.col);
+            toast.error("Path not reachable");
+          } else {
+            toast.success("Path Found.");
+          }
         }
       }, 50 * i);
     }
@@ -74,7 +97,16 @@ const Djikstra = () => {
     const end = grid[endNode.row][endNode.col];
     const visitedNodesInOrder = dijkstra(grid, start, end);
     const nodesInShortestPathOrder = getShortestPathNodes(end);
-    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    let flag = false;
+    if (
+      nodesInShortestPathOrder.length === 1 &&
+      nodesInShortestPathOrder[0] === end
+    ) {
+      flag = false;
+    } else {
+      flag = true;
+    }
+    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder, flag);
   };
 
   const handleStartNodeChange = (e) => {
@@ -121,11 +153,19 @@ const Djikstra = () => {
     return newGrid;
   };
 
+  const clearBoard = () => {
+    const initialGrid = createInitialGrid(startNode, endNode);
+    setGrid(initialGrid);
+    setVisitedNodes([]);
+    setShortestPathNodes([]);
+    toast.info("Board cleared");
+  };
+
   return (
     <div className="flex flex-col items-center space-y-6 py-6">
       <div className="flex space-x-4 mb-4 items-center">
         <div className="flex flex-col items-center">
-          <label htmlFor="startRow">Start Row</label>
+          <label htmlFor="startRow">Source Row</label>
           <input
             type="number"
             id="startRow"
@@ -137,7 +177,7 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="startCol">Start Column</label>
+          <label htmlFor="startCol">Source Column</label>
           <input
             type="number"
             id="startCol"
@@ -149,7 +189,7 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endRow">End Row</label>
+          <label htmlFor="endRow">Goal Row</label>
           <input
             type="number"
             id="endRow"
@@ -161,7 +201,7 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endCol">End Column</label>
+          <label htmlFor="endCol">Goal Column</label>
           <input
             type="number"
             id="endCol"
@@ -178,6 +218,13 @@ const Djikstra = () => {
           disabled={isFindingPath}
         >
           {isFindingPath ? "Finding Path..." : "Visualize Dijkstra's Algorithm"}
+        </button>
+        <button
+          onClick={clearBoard}
+          className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+          disabled={isFindingPath}
+        >
+          Clear Board
         </button>
       </div>
       <div className="grid grid-cols-50 gap-1 p-4 bg-gray-100 rounded-lg shadow-inner border border-gray-300 mx-4">

@@ -1,18 +1,28 @@
-import React from 'react';
+import React from "react";
+import Logo from "./Logo";
+function Header({ algo, setAlgo }) {
+  const handleAlgoClick = (selectedAlgo) => {
+    setAlgo(selectedAlgo);
+  };
 
-function Header() {
   return (
     <div className="flex justify-between p-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-md">
       <div className="flex items-center">
-        <img src="logo.png" alt="Logo" className="h-10 w-10 mr-2" />
-        <span className="text-xl font-bold">Algorithm Visualizer</span>
+        <Logo />
       </div>
       <div>
         <ul className="flex gap-6 mt-3">
-          <li className="hover:text-yellow-300 transition duration-300 cursor-pointer">Dijkstra Algorithm</li>
-          <li className="hover:text-yellow-300 transition duration-300 cursor-pointer">BFS</li>
-          <li className="hover:text-yellow-300 transition duration-300 cursor-pointer">DFS</li>
-          <li className="hover:text-yellow-300 transition duration-300 cursor-pointer">A* Algorithm</li>
+          {["Dijkstra", "BFS", "DFS"].map((algorithm) => (
+            <li
+              key={algorithm}
+              className={`cursor-pointer transition duration-300 ${
+                algo === algorithm ? "text-yellow-300 font-bold" : "hover:text-yellow-300"
+              }`}
+              onClick={() => handleAlgoClick(algorithm)}
+            >
+              {algorithm} Algorithm
+            </li>
+          ))}
         </ul>
       </div>
       <div>

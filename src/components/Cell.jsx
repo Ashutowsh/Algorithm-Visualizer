@@ -14,9 +14,9 @@ function Cell({
 }) {
   const baseClassName = "w-8 h-8 border inline-block";
   const extraClassName = isGoal
-    ? "bg-green-500 rounded-full border-green-700"
+    ? "bg-green-500 rounded-full border-green-700 shadow-2xl"
     : isSource
-    ? "bg-blue-500 border-blue-700"
+    ? "bg-blue-500 border-slate-700 shadow-2xl"
     : isObstacle
     ? "bg-gray-700"
     : "bg-white";
