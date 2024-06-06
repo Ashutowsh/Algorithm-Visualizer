@@ -1,11 +1,12 @@
-export function bfs(grid, startNode, endNode) {
+// ../Algorithms/DFS/algorithm.js
+export function dfs(grid, startNode, endNode) {
   const visitedNodes = [];
-  const queue = [];
+  const stack = [];
   startNode.distance = 0;
-  queue.push(startNode);
+  stack.push(startNode);
 
-  while (queue.length > 0) {
-    const currentNode = queue.shift();
+  while (stack.length > 0) {
+    const currentNode = stack.pop();
 
     if (currentNode.isWall) continue;
     if (currentNode.isVisited) continue;
@@ -19,7 +20,7 @@ export function bfs(grid, startNode, endNode) {
     for (const neighbor of unvisitedNeighbors) {
       neighbor.distance = currentNode.distance + 1;
       neighbor.previousNode = currentNode;
-      queue.push(neighbor);
+      stack.push(neighbor);
     }
   }
 

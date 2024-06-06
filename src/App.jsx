@@ -1,9 +1,14 @@
-import Grid from "./components/Grid";
-
+// import BFS from "./components/BFS";
+import DFS from "./components/DFS";
+// import Dijkstra from "./components/Djikstra";
+import Header from "./components/Header/Header";
 function App() {
   return (
     <div>
-      <Grid />
+      <Header />
+      {/* <Dijkstra /> */}
+      {/* <BFS /> */}
+      <DFS />
     </div>
   );
 }
