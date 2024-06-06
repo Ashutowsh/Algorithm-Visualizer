@@ -15,6 +15,7 @@ const Djikstra = () => {
   const [shortestPathNodes, setShortestPathNodes] = useState([]);
   const [startNode, setStartNode] = useState({ row: 10, col: 15 });
   const [endNode, setEndNode] = useState({ row: 10, col: 38 });
+  const [animationSpeed, setAnimationSpeed] = useState("medium");
 
   useEffect(() => {
     if (startNode.row < 0) startNode.row = 0;
@@ -48,23 +49,35 @@ const Djikstra = () => {
     setIsMousePressed(false);
   };
 
+  const getSpeed = () => {
+    switch (animationSpeed) {
+      case "slow":
+        return 40;
+      case "fast":
+        return 10;
+      default:
+        return 25;
+    }
+  };
+
   const animateDijkstra = (
     visitedNodesInOrder,
     nodesInShortestPathOrder,
     flag
   ) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+      const speed = getSpeed();
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder, flag);
-        }, 10 * i);
+        }, speed * i);
         return;
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         // Update the state to reflect the visited node
         setVisitedNodes((prevVisitedNodes) => [...prevVisitedNodes, node]);
-      }, 10 * i);
+      }, speed * i);
     }
   };
 
@@ -87,7 +100,7 @@ const Djikstra = () => {
             toast.success("Path Found.");
           }
         }
-      }, 50 * i);
+      }, 55 * i);
     }
   };
 
@@ -165,7 +178,9 @@ const Djikstra = () => {
     <div className="flex flex-col items-center space-y-6 py-6">
       <div className="flex space-x-4 mb-4 items-center">
         <div className="flex flex-col items-center">
-          <label htmlFor="startRow">Source Row</label>
+          <label htmlFor="startRow" className="text-blue-500">
+            Source Row
+          </label>
           <input
             type="number"
             id="startRow"
@@ -177,7 +192,9 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="startCol">Source Column</label>
+          <label htmlFor="startCol" className="text-blue-500">
+            Source Column
+          </label>
           <input
             type="number"
             id="startCol"
@@ -189,7 +206,9 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endRow">Goal Row</label>
+          <label htmlFor="endRow" className="text-green-500">
+            Goal Row
+          </label>
           <input
             type="number"
             id="endRow"
@@ -201,7 +220,9 @@ const Djikstra = () => {
           />
         </div>
         <div className="flex flex-col items-center">
-          <label htmlFor="endCol">Goal Column</label>
+          <label htmlFor="endCol" className="text-green-500">
+            Goal Column
+          </label>
           <input
             type="number"
             id="endCol"
@@ -226,6 +247,30 @@ const Djikstra = () => {
         >
           Clear Board
         </button>
+        <div className="relative inline-block">
+          <label htmlFor="speed" className="mr-2">
+            Speed:
+          </label>
+          <select
+            id="speed"
+            value={animationSpeed}
+            onChange={(e) => setAnimationSpeed(e.target.value)}
+            className="px-3 py-1 rounded-lg border border-gray-300 bg-white shadow-md focus:outline-none focus:border-blue-400"
+            disabled={isFindingPath}
+          >
+            <option value="slow">Slow</option>
+            <option value="medium">Medium</option>
+            <option value="fast">Fast</option>
+          </select>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg
+              className="w-4 h-4 fill-current text-gray-500"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-5.293 2.293a1 1 0 0 1-1.414-1.414l4-4a1 1 0 0 1 1.414 1.414l-4 4zM15.707 13.707a1 1 0 0 1-1.414 1.414l-4-4a1 1 0 1 1 1.414-1.414l4 4z" />
+            </svg>
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-50 gap-1 p-4 bg-gray-100 rounded-lg shadow-inner border border-gray-300 mx-4">
         {grid.map((row, rowIdx) => (
