@@ -12,11 +12,11 @@ function Cell({
   onMouseUp,
   row,
 }) {
-  const baseClassName = "w-8 h-8 border inline-block";
+  const baseClassName = "w-8 h-8 border inline-block shadow-lg z-10";
   const extraClassName = isGoal
-    ? "bg-green-500 rounded-full border-green-700 shadow-2xl"
+    ? "bg-green-500 rounded-full border-green-700 shadow-lg z-10"
     : isSource
-    ? "bg-blue-500 border-slate-700 shadow-2xl"
+    ? "bg-blue-500 border-slate-700"
     : isObstacle
     ? "bg-gray-700"
     : "bg-white";

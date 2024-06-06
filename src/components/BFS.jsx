@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Cell from "./Cell";
 import { bfs, getShortestPathNodes } from "../Algorithms/BFS/algorithm";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BFS = () => {
   const [grid, setGrid] = useState([]);
@@ -12,6 +14,15 @@ const BFS = () => {
   const [endNode, setEndNode] = useState({ row: 10, col: 38 });
 
   useEffect(() => {
+    if (startNode.row < 0) startNode.row = 0;
+    if (endNode.row < 0) endNode.row = 0;
+    if (startNode.row > 19) startNode.row = 19;
+    if (endNode.row > 19) endNode.row = 19;
+
+    if (startNode.col < 0) startNode.row = 0;
+    if (endNode.col < 0) endNode.col = 0;
+    if (startNode.col > 49) startNode.col = 49;
+    if (endNode.col > 49) endNode.col = 49;
     const initialGrid = createInitialGrid(startNode, endNode);
     setGrid(initialGrid);
   }, [startNode, endNode]);
@@ -33,11 +44,11 @@ const BFS = () => {
     setIsMousePressed(false);
   };
 
-  const animateBFS = (visitedNodesInOrder, nodesInShortestPathOrder) => {
+  const animateBFS = (visitedNodesInOrder, nodesInShortestPathOrder, flag) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
+          animateShortestPath(nodesInShortestPathOrder, flag);
         }, 10 * i);
         return;
       }
@@ -49,7 +60,7 @@ const BFS = () => {
     }
   };
 
-  const animateShortestPath = (nodesInShortestPathOrder) => {
+  const animateShortestPath = (nodesInShortestPathOrder, flag) => {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
@@ -58,8 +69,14 @@ const BFS = () => {
           ...prevShortestPathNodes,
           node,
         ]);
-        if (i === nodesInShortestPathOrder.length - 1) {
+        if (i == nodesInShortestPathOrder.length - 1) {
           setIsFindingPath(false);
+          if (!flag) {
+            toggleWall(grid, startNode.row, startNode.col);
+            toast.error("Path not reachable");
+          } else {
+            toast.success("Path Found.");
+          }
         }
       }, 50 * i);
     }
@@ -71,7 +88,16 @@ const BFS = () => {
     const end = grid[endNode.row][endNode.col];
     const visitedNodesInOrder = bfs(grid, start, end);
     const nodesInShortestPathOrder = getShortestPathNodes(end);
-    animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
+    let flag = false;
+    if (
+      nodesInShortestPathOrder.length === 1 &&
+      nodesInShortestPathOrder[0] === end
+    ) {
+      flag = false;
+    } else {
+      flag = true;
+    }
+    animateBFS(visitedNodesInOrder, nodesInShortestPathOrder, flag);
   };
 
   const handleStartNodeChange = (e) => {
@@ -116,6 +142,14 @@ const BFS = () => {
     };
     newGrid[row][col] = newNode;
     return newGrid;
+  };
+
+  const clearBoard = () => {
+    const initialGrid = createInitialGrid(startNode, endNode);
+    setGrid(initialGrid);
+    setVisitedNodes([]);
+    setShortestPathNodes([]);
+    toast.info("Board cleared");
   };
 
   return (
@@ -175,6 +209,13 @@ const BFS = () => {
           disabled={isFindingPath}
         >
           {isFindingPath ? "Finding Path..." : "Visualize BFS"}
+        </button>
+        <button
+          onClick={clearBoard}
+          className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+          disabled={isFindingPath}
+        >
+          Clear Board
         </button>
       </div>
       <div className="grid grid-cols-50 gap-1 p-4 bg-gray-100 rounded-lg shadow-inner border border-gray-300 mx-4">
